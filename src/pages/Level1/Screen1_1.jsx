@@ -1,35 +1,64 @@
-import React, { useEffect, useRef } from 'react'; // Thêm useEffect và useRef
+import React, { useState } from 'react'; // Thêm useState để quản lý trạng thái video
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+
+// --- IMPORT ASSETS ---
 import clickSnd from '../../assets/sounds/click.mp3';
-import voiceSnd from '../../assets/sounds/1.1.m4a'; // Import file âm thanh mới của bạn
+import introVideo from '../../assets/videos/video1_1.mp4'; // Thêm video mới
 
 export default function Screen1_1() {
   const navigate = useNavigate();
-  const audioRef = useRef(null); // Quản lý âm thanh thoại Pipo
+  const [videoFinished, setVideoFinished] = useState(false); // Trạng thái kiểm soát video
   const cuteFont = "'Itim', cursive";
 
-  // Logic phát âm thanh thoại khi vừa vào màn hình
-  useEffect(() => {
-    audioRef.current = new Audio(voiceSnd);
-    audioRef.current.play().catch(err => console.log("Chờ tương tác để phát nhạc:", err));
+  const playClick = () => {
+    const navAudio = new Audio(clickSnd);
+    navAudio.play();
+  };
 
-    // Cleanup: Ngắt thoại ngay khi nhấn nút chuyển màn
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    };
-  }, []);
+  // 1. GIAO DIỆN VIDEO ĐẦU TRANG
+  if (!videoFinished) {
+    return (
+      <div style={{ 
+        width: '100vw', height: '100vh', background: 'black', 
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        position: 'relative', overflow: 'hidden' 
+      }}>
+        <video 
+          src={introVideo} 
+          autoPlay 
+          onEnded={() => setVideoFinished(true)} // Tự động chuyển màn khi xong video
+          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+        />
+        
+        {/* Nút Bỏ qua video cho bé */}
+        <button 
+          onClick={() => setVideoFinished(true)}
+          style={{ 
+            position: 'absolute', bottom: '30px', right: '30px', 
+            padding: '10px 25px', borderRadius: '15px', background: 'rgba(255,255,255,0.6)',
+            border: 'none', cursor: 'pointer', fontFamily: cuteFont, fontSize: '18px',
+            boxShadow: '0 4px 0 rgba(0,0,0,0.2)'
+          }}
+        >
+          Bỏ qua ⏭️
+        </button>
+      </div>
+    );
+  }
 
+  // 2. GIAO DIỆN MÀN 1.1 GỐC (HIỆN SAU KHI XONG VIDEO)
   return (
-    <div style={{
-      width: '100vw', minHeight: '100vh', display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
-      background: 'linear-gradient(to bottom, #7dd3fc, #f0fdf4)', position: 'relative',
-      fontFamily: cuteFont
-    }}>
+    <motion.div 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }}
+      style={{
+        width: '100vw', minHeight: '100vh', display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+        background: 'linear-gradient(to bottom, #7dd3fc, #f0fdf4)', position: 'relative',
+        fontFamily: cuteFont
+      }}
+    >
       <motion.div 
         animate={{ rotate: 360, scale: [1, 1.1, 1] }} 
         transition={{ rotate: { repeat: Infinity, duration: 20, ease: "linear" }, scale: { repeat: Infinity, duration: 4 } }}
@@ -53,7 +82,7 @@ export default function Screen1_1() {
           style={{ background: 'white', padding: '30px 50px', borderRadius: '50px', border: '8px solid #fde047', boxShadow: '0 15px 30px rgba(0,0,0,0.1)', textAlign: 'center', position: 'relative' }}
         >
           <p style={{ fontSize: '32px', fontWeight: 'bold', color: '#1e293b', margin: 0 }}>
-            "Tèn ten! Xin chào Hiệp sĩ mới! Tớ là <span style={{ color: '#2563eb' }}>Pipo</span>. <br/> từ hôm nay, cậu sẽ cùng tớ học cách dùng lá chắn an toàn để bảo vệ nụ cười nhé!"
+            "Tèn ten! Xin chào Hiệp sĩ mới! Tớ là <span style={{ color: '#2563eb' }}>Pipo</span>. <br/>Cùng tớ bảo vệ nụ cười nhé!"
           </p>
           <div style={{ position: 'absolute', bottom: '-25px', left: '50%', transform: 'translateX(-50%) rotate(45deg)', width: '40px', height: '40px', background: 'white', borderRight: '8px solid #fde047', borderBottom: '8px solid #fde047' }} />
         </motion.div>
@@ -70,9 +99,7 @@ export default function Screen1_1() {
           whileHover={{ scale: 1.1 }} 
           whileTap={{ scale: 0.9 }} 
           onClick={() => { 
-            // Phát âm thanh click độc lập để không bị ngắt khi chuyển màn
-            const navAudio = new Audio(clickSnd);
-            navAudio.play();
+            playClick();
             navigate('/level1/screen1_2'); 
           }}
           style={{ 
@@ -84,6 +111,6 @@ export default function Screen1_1() {
           ⭐ TỚ SẴN SÀNG!
         </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 }
