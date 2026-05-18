@@ -1,94 +1,41 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 export default function Screen6_3() {
+  const navigate = useNavigate();
+  const cuteFont = "'Itim', cursive";
+
   return (
-    <div className="relative w-full h-screen bg-yellow-50 flex flex-col items-center justify-center p-6 overflow-hidden">
+    <div style={{
+      width: '100vw', minHeight: '100vh', background: 'radial-gradient(circle, #fef08a, #fef9c3)',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', fontFamily: cuteFont, overflow: 'hidden'
+    }}>
       
-      {/* Cờ SafeKids tung bay */}
-      <motion.div 
-        animate={{ rotate: [-2, 2, -2] }}
-        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-        className="absolute top-0 left-10 w-24 h-40 bg-blue-600 rounded-b-full shadow-lg flex items-center justify-center border-4 border-t-0 border-yellow-400"
-      >
-        <span className="text-white font-extrabold text-2xl rotate-90 tracking-widest">SAFEKIDS</span>
-      </motion.div>
-      <motion.div 
-        animate={{ rotate: [2, -2, 2] }}
-        transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-        className="absolute top-0 right-10 w-24 h-40 bg-red-500 rounded-b-full shadow-lg flex items-center justify-center border-4 border-t-0 border-yellow-400"
-      >
-        <span className="text-white font-extrabold text-2xl -rotate-90 tracking-widest">SAFEKIDS</span>
-      </motion.div>
+      {/* Hiệu ứng pháo hoa nhẹ */}
+      <motion.div animate={{ y: [0, -20, 0], scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }} style={{ position: 'absolute', top: '10%', left: '15%', fontSize: '50px' }}>✨</motion.div>
+      <motion.div animate={{ y: [0, -20, 0], scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2.5, delay: 0.5 }} style={{ position: 'absolute', top: '20%', right: '15%', fontSize: '60px' }}>🌟</motion.div>
 
-      {/* Đại sảnh ánh sáng */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-100 via-transparent to-transparent opacity-80 pointer-events-none" />
-
-      {/* Nhân vật Pipo phong tước cho Thỏ Trắng */}
-      <div className="flex items-end justify-center gap-10 z-10 mb-10">
-        <motion.div 
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="text-9xl drop-shadow-2xl flex flex-col items-center"
-        >
-          🐘
-          {/* Thanh kiếm ánh sáng */}
-          <motion.div 
-            initial={{ rotate: -45, y: -50, x: 50 }}
-            animate={{ rotate: 45, y: -80, x: 100 }}
-            transition={{ duration: 2, delay: 1 }}
-            className="w-2 h-32 bg-cyan-300 shadow-[0_0_20px_rgba(103,232,249,1)] absolute bottom-10 origin-bottom rounded-full"
-          />
-        </motion.div>
-        
-        <motion.div 
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="text-8xl drop-shadow-2xl mt-10"
-        >
-          🐰
-        </motion.div>
+      <motion.div animate={{ rotateY: 360 }} transition={{ repeat: Infinity, duration: 5, ease: "linear" }} style={{ fontSize: '160px', filter: 'drop-shadow(0 0 40px #facc15)' }}>
+        🛡️
+      </motion.div>
+      
+      <h1 style={{ color: '#b45309', fontSize: '50px', textAlign: 'center', margin: '20px 0 10px 0', textShadow: '0 5px 10px rgba(0,0,0,0.1)' }}>LỄ PHONG TƯỚC</h1>
+      <h2 style={{ color: '#d97706', fontSize: '35px', margin: '0 0 30px 0' }}>HIỆP SĨ TẬP SỰ DŨNG CẢM</h2>
+      
+      <div style={{ background: 'white', padding: '30px 50px', borderRadius: '40px', border: '5px solid #f59e0b', textAlign: 'center', maxWidth: '700px', boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}>
+        <p style={{ fontSize: '30px', color: '#92400e', margin: 0, fontWeight: 'bold', lineHeight: 1.5 }}>
+          “Con có quyền được an toàn.<br/>Con không im lặng một mình.”
+        </p>
       </div>
 
-      {/* Lời thoại Pipo */}
-      <motion.div 
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 2, type: "spring" }}
-        className="bg-white px-8 py-4 rounded-3xl shadow-xl border-4 border-yellow-400 text-center max-w-2xl z-20 mb-8"
+      <motion.button 
+        whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+        onClick={() => navigate('/')} 
+        style={{ marginTop: '50px', background: '#f59e0b', color: 'white', padding: '20px 70px', borderRadius: '50px', fontSize: '28px', border: 'none', cursor: 'pointer', fontFamily: cuteFont, boxShadow: '0 10px 0 #d97706' }}
       >
-        <p className="text-xl text-gray-800 font-bold leading-relaxed">
-          "Từ hôm nay, cậu là Hiệp sĩ bảo vệ nụ cười. Cậu biết nhận ra nguy cơ, biết nói rõ ràng, biết tìm nơi an toàn và biết gọi viện binh." [cite: 247]
-        </p>
-      </motion.div>
-
-      {/* Phần thưởng và Câu thần chú */}
-      <motion.div 
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 3.5 }}
-        className="flex flex-col items-center bg-blue-900 p-8 rounded-[3rem] shadow-2xl border-8 border-yellow-500 z-20"
-      >
-        <div className="text-7xl mb-4 animate-bounce">🛡️⭐</div>
-        <h2 className="text-3xl font-extrabold text-yellow-400 mb-6 uppercase tracking-wider drop-shadow-md">
-          Hiệp sĩ Tập sự Dũng Cảm [cite: 248]
-        </h2>
-        
-        <div className="bg-blue-800 p-6 rounded-2xl border-2 border-blue-400 text-center max-w-xl">
-          <p className="text-blue-200 font-semibold mb-2 uppercase text-sm tracking-widest">Lời Thề Hiệp Sĩ</p>
-          <p className="text-white text-2xl font-bold italic">
-            "Con có quyền được an toàn. Con không im lặng một mình." [cite: 248]
-          </p>
-        </div>
-
-        <button 
-          onClick={() => alert("Chúc mừng bạn đã hoàn thành Cấp độ 1! 🥳")}
-          className="mt-8 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-extrabold text-xl py-4 px-12 rounded-full shadow-[0_0_40px_rgba(250,204,21,0.6)] hover:scale-105 transition-transform"
-        >
-          Nhận Huy Hiệu & Hoàn Thành 🎓
-        </button>
-      </motion.div>
-
+        Hoàn Thành Cấp Độ 1 🌟
+      </motion.button>
     </div>
   );
 }

@@ -1,41 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // --- IMPORT ASSETS ---
 import backgroundImage from '../../assets/images/background0_2.jpg'; 
-import clickSnd from '../../assets/sounds/click.mp3';
-import magicSnd from '../../assets/sounds/magic.mp3';
 
 export default function Screen0_2() {
   const navigate = useNavigate();
   const [showAdultPopup, setShowAdultPopup] = useState(false);
   const [answer, setAnswer] = useState('');
   const cuteFont = "'Itim', cursive";
-  
-  // 1. QUẢN LÝ CẮT ÂM THANH
-  const audioRef = useRef(null);
-  
-  const playSound = (src) => { 
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-    audioRef.current = new Audio(src); 
-    audioRef.current.play().catch(() => {}); 
-  };
 
-  useEffect(() => {
-    // Tắt toàn bộ âm thanh khi chuyển sang screen khác
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
-    };
-  }, []);
-
-  // 2. HIỆU ỨNG VIỀN (OUTLINE)
+  // HIỆU ỨNG VIỀN (OUTLINE)
   const textOutline = "2px 2px 0 #fff, -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 0px 2px 0 #fff, 0px -2px 0 #fff, 2px 0px 0 #fff, -2px 0px 0 #fff";
   const itemOutline = "drop-shadow(3px 0 0 white) drop-shadow(-3px 0 0 white) drop-shadow(0 3px 0 white) drop-shadow(0 -3px 0 white)";
 
@@ -67,7 +43,7 @@ export default function Screen0_2() {
       
       {/* Nút Ổ khóa ẩn (Góc người lớn) - GIỮ LẠI ĐỂ TRUY CẬP 0_3 */}
       <button 
-        onClick={() => { playSound(clickSnd); setShowAdultPopup(true); }}
+        onClick={() => setShowAdultPopup(true)}
         style={{ 
           position: 'absolute', top: '20px', right: '20px', // Đưa về vị trí mặc định
           background: 'rgba(255, 255, 255, 0.7)', border: 'none', 
@@ -110,7 +86,7 @@ export default function Screen0_2() {
           // ✨ NÂNG CẤP: HIỆU ỨNG PHÁT SÁNG NHÈ NHẸ CỰC THU HÚT
           animate={{ boxShadow: ['0 20px 50px rgba(249, 115, 22, 0.3)', '0 20px 70px rgba(249, 115, 22, 0.6)', '0 20px 50px rgba(249, 115, 22, 0.3)'] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          onClick={() => { playSound(magicSnd); navigate('/level1/screen1_1'); }}
+          onClick={() => navigate('/level1/screen1_1')}
           style={{ 
             width: '350px', // Tăng width cho cửa
             height: '450px', 
@@ -133,13 +109,13 @@ export default function Screen0_2() {
           </h3>
         </motion.div>
 
-        {/* Cửa Phải - Lớp 4, 5 */}
+        {/* Cửa Phải - Lớp 4, 5 (Đã được cập nhật Link sang Cấp độ 2) */}
         <motion.div 
           whileHover={{ scale: 1.05 }}
           // ✨ NÂNG CẤP: HIỆU ỨNG PHÁT SÁNG NHÈ NHẸ CỰC THU HÚT
           animate={{ boxShadow: ['0 20px 50px rgba(71, 85, 105, 0.3)', '0 20px 70px rgba(71, 85, 105, 0.6)', '0 20px 50px rgba(71, 85, 105, 0.3)'] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          onClick={() => { playSound(clickSnd); alert("Chế độ Lớp 4, 5 đang phát triển!"); }}
+          onClick={() => navigate('/level2/screen1_1')} // 🎯 Đã cập nhật Route
           style={{ 
             width: '350px', // Tăng width cho cửa
             height: '450px', 

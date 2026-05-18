@@ -53,7 +53,7 @@ export default function Screen5_2() {
       {activeFingers.length === 5 && (
         <motion.button 
           initial={{ scale: 0 }} animate={{ scale: 1 }} 
-          onClick={() => navigate('/level1/screen6_1')} 
+          onClick={() => navigate('/level1/screen5_3')} 
           style={{ 
             marginTop: '50px', background: '#f59e0b', color: 'white', padding: '15px 40px', 
             borderRadius: '50px', fontSize: '24px', border: 'none', cursor: 'pointer', fontFamily: cuteFont,

@@ -1,90 +1,105 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Screen3_4() {
   const navigate = useNavigate();
-  const [energy, setEnergy] = useState(0);
+  const cuteFont = "'Itim', cursive";
+  
   const [isCharging, setIsCharging] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const intervalRef = useRef(null);
+  const [energy, setEnergy] = useState(0);
 
-  const startCharging = () => {
-    if (isSuccess) return;
-    setIsCharging(true);
-    intervalRef.current = setInterval(() => {
-      setEnergy((prev) => {
-        if (prev >= 100) {
-          clearInterval(intervalRef.current);
-          setIsSuccess(true);
-          return 100;
-        }
-        return prev + 5;
-      });
-    }, 100);
-  };
-
-  const stopCharging = () => {
-    setIsCharging(false);
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    if (!isSuccess) {
-      intervalRef.current = setInterval(() => {
-        setEnergy((prev) => {
-          if (prev <= 0) { clearInterval(intervalRef.current); return 0; }
-          return prev - 10;
-        });
-      }, 100);
+  // Logic sạc năng lượng khi nhấn giữ
+  useEffect(() => {
+    let interval;
+    if (isCharging && energy < 100) {
+      interval = setInterval(() => setEnergy(prev => Math.min(prev + 2, 100)), 50);
+    } else if (!isCharging && energy < 100 && energy > 0) {
+      // Nếu buông tay khi chưa đầy, tụt năng lượng dần dần
+      interval = setInterval(() => setEnergy(prev => Math.max(prev - 1, 0)), 50);
     }
-  };
-
-  useEffect(() => { return () => { if (intervalRef.current) clearInterval(intervalRef.current); }; }, []);
+    return () => clearInterval(interval);
+  }, [isCharging, energy]);
 
   return (
-    <div className="relative w-full h-screen bg-slate-900 flex flex-col items-center justify-center p-6 overflow-hidden select-none">
-      <h1 className="absolute top-10 text-4xl font-extrabold text-white uppercase tracking-widest drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-        Khu vực tập luyện khẩu lệnh
-      </h1>
+    <div style={{
+      width: '100vw', minHeight: '100vh', background: '#f5f3ff',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px 20px',
+      fontFamily: cuteFont, userSelect: 'none', overflow: 'hidden'
+    }}>
+      <h1 style={{ fontSize: '38px', color: '#6d28d9', textAlign: 'center', marginBottom: '10px' }}>SÂN TẬP KHẨU LỆNH</h1>
+      <p style={{ fontSize: '22px', color: '#5b21b6', textAlign: 'center', marginBottom: '30px' }}>
+        Nhấn giữ nút liên tục để nói thật dứt khoát nhé!
+      </p>
 
-      <div className="flex w-full max-w-4xl justify-between items-end mb-20 z-10">
-        <div className="flex flex-col items-center gap-4">
-          <div className="bg-white/90 p-4 rounded-xl shadow-lg border-2 border-blue-400">
-            <p className="text-slate-800 font-bold text-center">
-              "Dừng ngay lại! Tớ không hề thích điều này."<br/>
-              <span className="text-sm text-slate-500 italic">Bạn hãy nhấn giữ nút để nói thật to và rõ nhé!</span>
-            </p>
+      <div style={{ display: 'flex', gap: '40px', alignItems: 'flex-end', justifyContent: 'center' }}>
+        
+        {/* Thỏ Trắng trên bục phát sáng */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <motion.div
+            animate={{ scale: energy === 100 ? [1, 1.1, 1] : 1 }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            style={{ fontSize: '100px', zIndex: 10 }}
+          >
+            🐰
+          </motion.div>
+          <div style={{ width: '150px', height: '30px', background: 'radial-gradient(ellipse, #d8b4fe, transparent)', borderRadius: '50%', border: '2px solid #a855f7', boxShadow: '0 0 20px #d8b4fe' }} />
+        </div>
+
+        {/* Thanh Năng Lượng */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            width: '60px', height: '250px', background: 'white', borderRadius: '30px',
+            border: '4px solid #c4b5fd', padding: '5px', display: 'flex', flexDirection: 'column-reverse', overflow: 'hidden'
+          }}>
+            <div style={{ width: '100%', height: `${energy}%`, background: 'linear-gradient(to top, #a855f7, #f472b6, #fde047)', borderRadius: '25px', transition: 'height 0.1s' }} />
           </div>
-          <div className="text-8xl">🐘</div>
-        </div>
-
-        <div className="w-24 h-96 bg-slate-700 rounded-full border-8 border-slate-800 flex flex-col-reverse p-2 shadow-inner overflow-hidden relative">
-          <motion.div className="w-full bg-gradient-to-t from-red-500 via-orange-500 to-yellow-400 rounded-full" style={{ height: `${energy}%` }} animate={{ height: `${energy}%` }} transition={{ ease: "linear", duration: 0.1 }} />
-          <div className="absolute top-8 left-0 w-full border-t-4 border-dashed border-white/50" />
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div className="text-8xl relative z-10 mb-[-20px]">🐰</div>
-          <div className="w-32 h-16 bg-blue-500 rounded-t-full shadow-[0_-10px_30px_rgba(59,130,246,0.8)] border-4 border-b-0 border-blue-300" />
+          <span style={{ fontSize: '20px', color: '#7e22ce', fontWeight: 'bold' }}>{energy}% Uy Lực</span>
         </div>
       </div>
 
-      {!isSuccess ? (
-        <motion.button whileTap={{ scale: 0.9 }} onPointerDown={startCharging} onPointerUp={stopCharging} onPointerLeave={stopCharging} className="bg-red-500 hover:bg-red-600 text-white font-extrabold text-3xl py-6 px-16 rounded-full shadow-[0_10px_0_rgb(153,27,27)] uppercase tracking-wider z-20 flex items-center gap-4 active:shadow-[0_0px_0_rgb(153,27,27)] active:translate-y-[10px]">
-          🎙️ GIỮ ĐỂ NÓI
-        </motion.button>
-      ) : (<div className="h-24" />)}
-
-      <AnimatePresence>
-        {isSuccess && (
-          <motion.div initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="absolute inset-0 bg-black/80 z-50 flex flex-col items-center justify-center backdrop-blur-sm">
-            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 10, ease: "linear" }} className="text-9xl drop-shadow-[0_0_100px_rgba(250,204,21,1)]">⭐</motion.div>
-            <h2 className="text-5xl font-extrabold text-yellow-400 mt-8 uppercase tracking-widest drop-shadow-2xl">Giọng nói uy lực!</h2>
-            <p className="text-white text-2xl mt-4 font-bold">Nói rõ ràng - Thái độ dứt khoát - Không bạo lực.</p>
-            <button onClick={() => navigate('/level1/screen4_1')} className="mt-10 bg-green-500 text-white font-bold text-2xl py-4 px-12 rounded-full shadow-xl border-4 border-white hover:bg-green-400 transition">
-              Đi tiếp ➡️
-            </button>
+      {/* Lời thoại bay lên khi đang sạc */}
+      <div style={{ height: '40px', marginTop: '20px' }}>
+        {isCharging && energy < 100 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ fontSize: '24px', color: '#db2777', fontWeight: 'bold' }}>
+            "Dừng lại. Mình không đồng ý!"
           </motion.div>
         )}
-      </AnimatePresence>
+      </div>
+
+      <div style={{ marginTop: '20px' }}>
+        {energy < 100 ? (
+          <motion.div
+            onPointerDown={() => setIsCharging(true)}
+            onPointerUp={() => setIsCharging(false)}
+            onPointerLeave={() => setIsCharging(false)}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              background: isCharging ? '#c084fc' : '#a855f7', color: 'white', padding: '20px 40px',
+              borderRadius: '50px', fontSize: '26px', cursor: 'pointer', border: '4px solid #7e22ce',
+              boxShadow: isCharging ? 'none' : '0 10px 0 #7e22ce'
+            }}
+          >
+            🎙️ {isCharging ? 'Đang nói to...' : 'Nhấn giữ để nói dứt khoát'}
+          </motion.div>
+        ) : (
+          <AnimatePresence>
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ textAlign: 'center', background: 'white', padding: '20px 40px', borderRadius: '30px', border: '4px solid #facc15', boxShadow: '0 10px 30px rgba(0,0,0,0.1)' }}>
+              <div style={{ fontSize: '80px', filter: 'drop-shadow(0 0 10px #facc15)' }}>⭐</div>
+              <h2 style={{ color: '#d97706', fontSize: '28px', margin: '10px 0' }}>BẠN ĐÃ LÀM RẤT TỐT!</h2>
+              <p style={{ color: '#0f172a', fontSize: '24px', fontWeight: 'bold', margin: 0 }}>
+                Câu ghi nhớ: “Rõ ràng – Dứt khoát – Không đánh lại.”
+              </p>
+              <button
+                onClick={() => navigate('/level1/screen4_1')} // Route sang màn 4.1
+                style={{ marginTop: '20px', background: '#a855f7', color: 'white', padding: '15px 40px', borderRadius: '50px', fontSize: '22px', border: 'none', cursor: 'pointer', fontFamily: cuteFont, boxShadow: '0 6px 0 #7e22ce' }}
+              >
+                Vào phần 4 🚀
+              </button>
+            </motion.div>
+          </AnimatePresence>
+        )}
+      </div>
     </div>
   );
 }

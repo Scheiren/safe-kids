@@ -1,57 +1,69 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export default function Screen4_1() {
   const navigate = useNavigate();
   const [isSafe, setIsSafe] = useState(false);
-
-  const handleDragEnd = (event, info) => {
-    if (info.point.y < window.innerHeight / 2) {
-      setIsSafe(true);
-    }
-  };
+  const cuteFont = "'Itim', cursive";
 
   return (
-    <div className="relative w-full h-screen flex flex-col overflow-hidden">
-      <div className="absolute top-6 left-1/2 transform -translate-x-1/2 bg-white px-6 py-3 rounded-full shadow-lg border-2 border-blue-300 z-50 w-[90%] max-w-2xl flex items-center gap-4">
-        <span className="text-4xl">🐘</span>
-        <p className="text-gray-800 font-bold">
-          "Lúc gặp nguy hiểm, một hiệp sĩ thông minh sẽ không đứng lại cãi vã. Hiệp sĩ sẽ nhanh chóng rời đi và tìm đến một nơi an toàn hơn."
-        </p>
+    <div style={{
+      width: '100vw', minHeight: '100vh', background: '#1e293b', // Nền tối ban đầu
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      fontFamily: cuteFont, padding: '20px', position: 'relative', overflow: 'hidden'
+    }}>
+      
+      <motion.h1 
+        animate={{ color: isSafe ? '#15803d' : '#f8fafc' }}
+        style={{ fontSize: '40px', zIndex: 10, textAlign: 'center', marginBottom: '20px' }}
+      >
+        {isSafe ? "Tuyệt vời! Cậu đã đến nơi an toàn!" : "Kéo Thỏ Trắng đến vùng sáng an toàn!" /* [cite: 192] */}
+      </motion.h1>
+
+      <div style={{ 
+        width: '100%', maxWidth: '800px', height: '500px', background: '#334155', 
+        borderRadius: '30px', position: 'relative', overflow: 'hidden', border: '8px solid #475569' 
+      }}>
+        {/* Vùng tối (Nguy hiểm) */}
+        <div style={{ position: 'absolute', left: 0, top: 0, width: '40%', height: '100%', background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <span style={{ fontSize: '100px', opacity: 0.5 }}>🦊</span>
+        </div>
+
+        {/* Vùng sáng (An toàn) */}
+        <div style={{ position: 'absolute', right: 0, top: 0, width: '40%', height: '100%', background: '#fef08a', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '-20px 0 50px rgba(253, 224, 71, 0.5)' }}>
+          <span style={{ fontSize: '80px' }}>👩‍🏫</span>
+        </div>
+
+        {/* Nhân vật Thỏ Trắng cho phép kéo thả [cite: 192] */}
+        <motion.div
+          drag
+          dragConstraints={{ left: -100, right: 300, top: -200, bottom: 200 }}
+          onDragEnd={(event, info) => {
+            if (info.point.x > window.innerWidth / 2) {
+              setIsSafe(true);
+            }
+          }}
+          style={{
+            position: 'absolute', left: '15%', top: '40%', fontSize: '90px', 
+            cursor: 'grab', zIndex: 20, background: 'white', borderRadius: '50%', padding: '10px',
+            boxShadow: '0 10px 20px rgba(0,0,0,0.3)'
+          }}
+          whileTap={{ cursor: 'grabbing', scale: 1.1 }}
+        >
+          🐰
+        </motion.div>
       </div>
 
-      <div className="flex-1 bg-yellow-100 flex items-center justify-around p-10 border-b-8 border-yellow-300 relative">
-        <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-yellow-300 via-transparent to-transparent animate-pulse" />
-        <div className="bg-white/80 px-6 py-4 rounded-2xl shadow-md border-4 border-green-400 text-center z-10"><span className="text-4xl block mb-2">👩‍🏫</span><span className="font-bold text-green-700">Lớp học</span></div>
-        <div className="bg-white/80 px-6 py-4 rounded-2xl shadow-md border-4 border-green-400 text-center z-10"><span className="text-4xl block mb-2">🏫</span><span className="font-bold text-green-700">Phòng Giáo viên</span></div>
-        <div className="bg-white/80 px-6 py-4 rounded-2xl shadow-md border-4 border-green-400 text-center z-10"><span className="text-4xl block mb-2">⚕️</span><span className="font-bold text-green-700">Phòng Y tế</span></div>
-      </div>
-
-      <div className="flex-1 bg-slate-800 flex items-center justify-center relative">
-        <div className="absolute top-4 text-slate-400 font-semibold tracking-widest uppercase">Khu vực góc khuất / Nhà kho vắng vẻ</div>
-        {!isSafe && <div className="absolute right-1/4 text-8xl drop-shadow-2xl">🦊</div>}
-        <AnimatePresence>
-          {!isSafe && (
-            <motion.div drag dragConstraints={{ left: -200, right: 200, top: -400, bottom: 50 }} dragElastic={0.2} onDragEnd={handleDragEnd} whileDrag={{ scale: 1.2 }} exit={{ opacity: 0, scale: 0 }} className="text-8xl cursor-grab active:cursor-grabbing drop-shadow-[0_0_30px_rgba(255,255,255,0.2)] z-20">
-              🐰<div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white/20 text-white text-xs px-2 py-1 rounded-full whitespace-nowrap">Kéo tớ lên vùng sáng!</div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      <AnimatePresence>
-        {isSafe && (
-          <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} className="absolute inset-0 bg-white/90 z-50 flex flex-col items-center justify-center">
-            <div className="text-9xl mb-6">🐰✨</div>
-            <h2 className="text-4xl font-bold text-green-600 mb-4">An toàn rồi!</h2>
-            <p className="text-xl font-medium text-gray-700 mb-8">Tuyệt đối không đi vào chỗ vắng, không ở lại đôi co.</p>
-            <button onClick={() => navigate('/level1/screen4_3')} className="bg-blue-500 hover:bg-blue-600 text-white font-bold text-2xl py-4 px-12 rounded-full shadow-lg transition">
-              Tiếp tục ➡️
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {isSafe && (
+        <motion.button 
+          initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+          onClick={() => navigate('/level1/screen4_2')}
+          style={{ marginTop: '30px', background: '#22c55e', color: 'white', padding: '15px 40px', borderRadius: '50px', fontSize: '24px', fontFamily: cuteFont, border: 'none', cursor: 'pointer' }}
+        >
+          Tiếp tục ➡️
+        </motion.button>
+      )}
     </div>
   );
 }

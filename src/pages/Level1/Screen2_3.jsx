@@ -1,182 +1,88 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// --- IMPORT ASSETS ---
-import clickSnd from '../../assets/sounds/click.mp3';
-import tadaSnd from '../../assets/sounds/tada.mp3';
-import successSnd from '../../assets/sounds/success.mp3';
-import voiceSnd from '../../assets/sounds/2.3.m4a'; // Giọng thoại hướng dẫn
-
 export default function Screen2_3() {
   const navigate = useNavigate();
-  const audioRef = useRef(null);
+  const [found, setFound] = useState([]);
+  const [showBadge, setShowBadge] = useState(false);
   const cuteFont = "'Itim', cursive";
 
-  // Danh sách 3 điểm bất thường theo kịch bản
-  const [spots, setSpots] = useState([
-    { id: 1, name: "Hành lang", top: "25%", left: "20%", found: false, desc: "Hai bạn Cáo chặn một bạn nhỏ" },
-    { id: 2, name: "Ghế đá", top: "65%", left: "45%", found: false, desc: "Một bạn bị giật đồ dùng học tập" },
-    { id: 3, name: "Nhà vệ sinh", top: "35%", left: "75%", found: false, desc: "Một bạn bị hất nước làm ướt áo" }
-  ]);
+  const hazards = [
+    { id: 1, name: "Góc hành lang", top: '25%', left: '20%', icon: "🦊🚫🐰" },
+    { id: 2, name: "Ghế đá", top: '65%', left: '45%', icon: "🦊🧸😭" },
+    { id: 3, name: "Nhà vệ sinh", top: '35%', left: '75%', icon: "🦊💦🐰" }
+  ];
 
-  const allFound = spots.every(s => s.found);
-
-  // Hiệu ứng Outline giúp vật phẩm nổi bật
-  const itemOutline = "drop-shadow(3px 0 0 white) drop-shadow(-3px 0 0 white) drop-shadow(0 3px 0 white) drop-shadow(0 -3px 0 white)";
-
-  // Phát giọng thoại hướng dẫn ngay khi vào màn hình
-  useEffect(() => {
-    audioRef.current = new Audio(voiceSnd);
-    audioRef.current.play().catch(err => console.log("Chờ tương tác để phát thoại:", err));
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
+  const handleFound = (id) => {
+    if (!found.includes(id)) {
+      setFound([...found, id]);
+      if (found.length + 1 === 3) {
+        setTimeout(() => setShowBadge(true), 1000);
       }
-    };
-  }, []);
-
-  const playSfx = (src) => { 
-    const sfx = new Audio(src);
-    sfx.play();
+    }
   };
 
   return (
-    <div style={{ 
-      width: '100vw', minHeight: '100vh', background: '#f0fdf4', 
-      display: 'flex', flexDirection: 'column', alignItems: 'center', 
-      padding: '20px', fontFamily: cuteFont, position: 'relative' 
-    }}>
+    <div style={{ width: '100vw', height: '100vh', background: '#f0fdf4', position: 'relative', fontFamily: cuteFont, overflow: 'hidden' }}>
+      {/* BACKGROUND SÂN TRƯỜNG (Placeholder) */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(#bae6fd, #f0fdf4)', opacity: 0.5 }} />
       
-      {/* KHUNG HƯỚNG DẪN TRÊN CÙNG */}
-      <motion.div 
-        initial={{ y: -20, opacity: 0 }} 
-        animate={{ y: 0, opacity: 1 }}
-        style={{ 
-          background: 'white', padding: '20px 60px', borderRadius: '100px', 
-          border: '6px solid #86efac', fontSize: '26px', color: '#166534', 
-          boxShadow: '0 10px 25px rgba(0,0,0,0.05)', zIndex: 10 
-        }}
-      >
-        "Quan sát kỹ để giúp đỡ bạn bè nhé!"
-      </motion.div>
-
-      {/* BẢN ĐỒ SÂN TRƯỜNG TƯƠNG TÁC */}
-      <div style={{ 
-        width: '92%', height: '480px', background: '#cbd5e1', 
-        borderRadius: '55px', position: 'relative', marginTop: '40px', 
-        overflow: 'hidden', border: '15px solid #94a3b8',
-        boxShadow: 'inset 0 0 50px rgba(0,0,0,0.1)'
-      }}>
-        {/* Placeholder cho ảnh nền sân trường lớn (nếu có) */}
-        <p style={{ position: 'absolute', width: '100%', textAlign: 'center', top: '45%', opacity: 0.3, fontSize: '20px' }}>
-          (Ảnh sân trường giờ ra chơi)
-        </p>
-
-        {spots.map(s => (
-          <div 
-            key={s.id} 
-            onClick={() => { 
-              if(!s.found) { 
-                playSfx(clickSnd); 
-                setSpots(prev => prev.map(x => x.id === s.id ? {...x, found: true} : x)); 
-              } 
-            }}
-            style={{ 
-              position: 'absolute', top: s.top, left: s.left, 
-              transform: 'translate(-50%, -50%)', cursor: 'pointer', zIndex: 20 
-            }}
-          >
-            {!s.found ? (
-              // Vùng Radar nhấp nháy phát sáng
-              <motion.div 
-                animate={{ scale: [1, 1.5, 1], opacity: [0.2, 0.5, 0.2] }} 
-                transition={{ repeat: Infinity, duration: 2 }} 
-                style={{ 
-                  width: '90px', height: '90px', background: 'rgba(239, 68, 68, 0.5)', 
-                  borderRadius: '50%', border: '2px dashed red' 
-                }} 
-              />
-            ) : (
-              // Hiện dấu tích khi đã tìm thấy
-              <motion.div 
-                initial={{ scale: 0, rotate: -180 }} 
-                animate={{ scale: 1, rotate: 0 }} 
-                style={{ 
-                  fontSize: '60px', background: 'white', borderRadius: '50%', 
-                  padding: '10px', border: '5px solid #22c55e', filter: itemOutline 
-                }}
-              >
-                ✅
-              </motion.div>
-            )}
-          </div>
-        ))}
+      <div style={{ position: 'relative', zIndex: 10, padding: '20px', textAlign: 'center' }}>
+        <h1 style={{ color: '#1e40af', fontSize: '32px' }}>NHIỆM VỤ: QUÉT RADAR SÂN TRƯỜNG</h1>
+        <p style={{ color: '#1e3a8a' }}>Hãy chạm vào 3 nơi bạn nhỏ đang cần giúp đỡ!</p>
       </div>
 
-      {/* LỜI THOẠI KẾT THÚC CỦA PIPO */}
-      <div style={{ marginTop: '30px', textAlign: 'center', maxWidth: '800px' }}>
-        <p style={{ fontSize: '22px', color: '#1e40af', lineHeight: '1.5' }}>
-          "Hiệp sĩ giỏi không chỉ biết tự bảo vệ mình. <br/>
-          Hiệp sĩ còn biết nhìn ra khi bạn khác đang cần giúp đỡ."
-        </p>
-      </div>
+      {/* CÁC ĐIỂM NGUY CƠ */}
+      {hazards.map(h => (
+        <div 
+          key={h.id} 
+          onClick={() => handleFound(h.id)}
+          style={{ position: 'absolute', top: h.top, left: h.left, transform: 'translate(-50%, -50%)', cursor: 'pointer' }}
+        >
+          {!found.includes(h.id) ? (
+            <motion.div 
+              animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+              style={{ width: '80px', height: '80px', background: 'rgba(239, 68, 68, 0.4)', borderRadius: '50%', border: '2px solid red' }}
+            />
+          ) : (
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ fontSize: '50px' }}>
+              ✅ {h.icon}
+            </motion.div>
+          )}
+        </div>
+      ))}
 
-      {/* POPUP NHẬN HUY CHƯƠNG MẮT THẦN */}
+      {/* POPUP NHẬN HUY CHƯƠNG */}
       <AnimatePresence>
-        {allFound && (
-          <motion.div 
-            onViewportEnter={() => playSfx(tadaSnd)} 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
+        {showBadge && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             style={{ 
-              position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.95)', 
-              display: 'flex', flexDirection: 'column', alignItems: 'center', 
-              justifyContent: 'center', zIndex: 100 
+              position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.9)', 
+              zIndex: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' 
             }}
           >
-            {/* Hiệu ứng huy chương xoay 3D sinh động */}
             <motion.div 
               animate={{ rotateY: 360, scale: [1, 1.1, 1] }} 
-              transition={{ 
-                rotateY: { repeat: Infinity, duration: 4, ease: "linear" }, 
-                scale: { repeat: Infinity, duration: 2 } 
-              }} 
-              style={{ fontSize: '220px', filter: itemOutline }}
+              transition={{ rotateY: { duration: 3, repeat: Infinity }, scale: { duration: 1, repeat: Infinity } }}
+              style={{ fontSize: '200px' }}
             >
               👁️‍🗨️
             </motion.div>
-            
-            <h2 style={{ 
-              color: '#facc15', fontSize: '50px', textAlign: 'center', 
-              textShadow: '0 0 30px #facc15', marginTop: '20px' 
-            }}>
-              HUY CHƯƠNG MẮT THẦN!
-            </h2>
-            
-            <p style={{ color: 'white', fontSize: '24px', marginTop: '10px', opacity: 0.8 }}>
-              Cậu đã hoàn thành xuất sắc Radar Sân Trường
-            </p>
-
-            <motion.button 
-              whileHover={{ scale: 1.1 }} 
-              whileTap={{ scale: 0.9 }}
-              onClick={() => { 
-                const navAudio = new Audio(successSnd);
-                navAudio.play();
-                navigate('/level1/screen3_1'); // Chuyển sang phần kết thúc/tổng kết
-              }} 
+            <h2 style={{ color: '#facc15', fontSize: '40px', marginTop: '20px' }}>HUY HIỆU: MẮT THẦN TẬP SỰ</h2>
+            <p style={{ color: 'white', fontSize: '20px' }}>Cậu đã nhận diện nguy cơ rất giỏi!</p>
+            <button 
+              onClick={() => navigate('/level1/screen3_1')}
               style={{ 
-                marginTop: '50px', background: '#facc15', color: '#713f12', 
-                padding: '25px 90px', borderRadius: '100px', fontSize: '34px', 
-                border: '8px solid white', boxShadow: '0 15px 0 #ca8a04', 
-                fontFamily: cuteFont, cursor: 'pointer' 
+                marginTop: '30px', background: '#facc15', color: '#713f12', 
+                padding: '15px 60px', borderRadius: '50px', border: 'none', fontSize: '24px', 
+                fontWeight: 'bold', cursor: 'pointer', boxShadow: '0 10px 0 #ca8a04' 
               }}
             >
-              Tiếp tục ➡️
-            </motion.button>
+              Tiếp tục hành trình ➡️
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
