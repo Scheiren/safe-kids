@@ -31,7 +31,7 @@ export default function Screen0_2() {
       display: 'flex', 
       flexDirection: 'column',
       alignItems: 'center', 
-      justifyContent: 'center', // 🎯 CĂN GIỮA TOÀN BỘ NỘI DUNG THEO TRỤC DỌC (MỚI)
+      justifyContent: 'center', 
       backgroundImage: `url(${backgroundImage})`, 
       backgroundSize: 'cover',
       backgroundPosition: 'center',
@@ -41,11 +41,11 @@ export default function Screen0_2() {
       boxSizing: 'border-box'
     }}>
       
-      {/* Nút Ổ khóa ẩn (Góc người lớn) - GIỮ LẠI ĐỂ TRUY CẬP 0_3 */}
+      {/* Nút Ổ khóa ẩn (Góc người lớn) */}
       <button 
         onClick={() => setShowAdultPopup(true)}
         style={{ 
-          position: 'absolute', top: '20px', right: '20px', // Đưa về vị trí mặc định
+          position: 'absolute', top: '20px', right: '20px', 
           background: 'rgba(255, 255, 255, 0.7)', border: 'none', 
           borderRadius: '15px', padding: '10px', cursor: 'pointer', 
           fontSize: '24px', filter: itemOutline,
@@ -55,43 +55,38 @@ export default function Screen0_2() {
         🔒
       </button>
 
-      {/* 🚫 KHU VỰC HIỂN THỊ TÊN & HỒ SƠ ĐÃ LOẠI BỎ */}
-      {/* 🚫 BIỂU TƯỢNG CÀI ĐẶT ĐÃ LOẠI BỎ */}
-
       <h1 style={{ 
         fontSize: '45px', color: '#1e3a8a', textAlign: 'center', 
         textShadow: textOutline, 
-        marginBottom: '60px', // 🎯 TĂNG KHOẢNG CÁCH DƯỚI TIÊU ĐỀ (MỚI)
+        marginBottom: '40px', 
         marginTop: '0px'
       }}>
         Chào cậu! Cậu đang học lớp mấy?
       </h1>
-      
-      {/* 🚫 BIỂU TƯỢNG PIPO & VĂN BẢN TRUNG TÂM ĐÃ LOẠI BỎ */}
 
-      {/* CONTAINER CHỨA 2 Ô CHỌN - TỰ ĐỘNG CĂN GIỮA NẰM TRONG PARENT FLEX */}
+      {/* CONTAINER CHỨA 2 Ô CHỌN */}
       <div style={{ 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center', 
-        gap: '60px', // 🎯 TĂNG KHOẢNG CÁCH GIỮA 2 CỬA (MỚI)
+        gap: '60px', 
         width: '100%', 
-        maxWidth: '1200px', // 🎯 TĂNG MAXWIDTH ĐỂ PHÙ HỢP BỐ CỤC CĂN GIỮA (MỚI)
-        flexWrap: 'wrap' 
+        maxWidth: '1200px', 
+        flexWrap: 'wrap',
+        marginBottom: '40px'
       }}>
         
         {/* Cửa Trái - Lớp 1, 2, 3 */}
         <motion.div 
           whileHover={{ scale: 1.05 }}
-          // ✨ NÂNG CẤP: HIỆU ỨNG PHÁT SÁNG NHÈ NHẸ CỰC THU HÚT
           animate={{ boxShadow: ['0 20px 50px rgba(249, 115, 22, 0.3)', '0 20px 70px rgba(249, 115, 22, 0.6)', '0 20px 50px rgba(249, 115, 22, 0.3)'] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
           onClick={() => navigate('/level1/screen1_1')}
           style={{ 
-            width: '350px', // Tăng width cho cửa
+            width: '350px', 
             height: '450px', 
             background: 'linear-gradient(to bottom, #fb923c, #f97316)',
-            borderRadius: '40px', // Bo tròn đều 4 góc
+            borderRadius: '40px', 
             border: '10px solid #fdba74', 
             cursor: 'pointer', display: 'flex', flexDirection: 'column', 
             alignItems: 'center', justifyContent: 'center',
@@ -109,18 +104,17 @@ export default function Screen0_2() {
           </h3>
         </motion.div>
 
-        {/* Cửa Phải - Lớp 4, 5 (Đã được cập nhật Link sang Cấp độ 2) */}
+        {/* Cửa Phải - Lớp 4, 5 */}
         <motion.div 
           whileHover={{ scale: 1.05 }}
-          // ✨ NÂNG CẤP: HIỆU ỨNG PHÁT SÁNG NHÈ NHẸ CỰC THU HÚT
           animate={{ boxShadow: ['0 20px 50px rgba(71, 85, 105, 0.3)', '0 20px 70px rgba(71, 85, 105, 0.6)', '0 20px 50px rgba(71, 85, 105, 0.3)'] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          onClick={() => navigate('/level2/screen1_1')} // 🎯 Đã cập nhật Route
+          onClick={() => navigate('/level2/screen1_1')}
           style={{ 
-            width: '350px', // Tăng width cho cửa
+            width: '350px', 
             height: '450px', 
             background: 'linear-gradient(to bottom, #94a3b8, #475569)',
-            borderRadius: '40px', // Bo tròn đều 4 góc
+            borderRadius: '40px', 
             border: '10px solid #cbd5e1', 
             cursor: 'pointer', display: 'flex', flexDirection: 'column', 
             alignItems: 'center', justifyContent: 'center',
@@ -138,6 +132,30 @@ export default function Screen0_2() {
           </h3>
         </motion.div>
       </div>
+
+      {/* ✨ THANH HOTLINE MỚI THÊM Ở ĐÂY */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        style={{
+          background: 'rgba(255, 255, 255, 0.85)',
+          padding: '12px 30px',
+          borderRadius: '20px',
+          border: '3px solid #bfdbfe',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '22px',
+          color: '#1e40af',
+          fontWeight: 'bold',
+          boxShadow: '0 8px 20px rgba(0,0,0,0.06)',
+          backdropFilter: 'blur(5px)',
+          zIndex: 5
+        }}
+      >
+        <span>📞 Hotline khẩn cấp: <span style={{ color: '#dc2626', fontSize: '24px' }}>111</span> (Tổng đài Quốc gia Bảo vệ Trẻ em)</span>
+      </motion.div>
 
       {/* Popup Người lớn (Giữ nguyên) */}
       <AnimatePresence>
